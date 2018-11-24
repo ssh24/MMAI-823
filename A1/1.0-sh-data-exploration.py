@@ -5,28 +5,27 @@ import pandas as pd
 
 # environment settings
 cwd = os.getcwd()
-data = os.path.join(cwd, 'data', 'data.csv')
+data = os.path.join(cwd, 'data', 'raw-data.csv')
 
 # read in data
 df = pd.read_csv(data)
 
-# fill in nan values with 0
-df = df.replace(np.nan, 0)
+rows = len(df.index)
 
-# drop the date column: not required
-df = df.drop('Data Year - Fiscal', axis = 1)
+id = 1
+df['cId'] = id
 
-# get the shape of the data
-print(df.shape)
-
-# describe the data
-print(df.describe())
-
-# get the first 20 rows of the data
-print(df.head(20))
-
-# get the correlation between each variables
-print(df.corr())
+for i, row in df.iterrows():
+    if i + 1 < rows:
+        curr_date = df['Data Year - Fiscal'][i]
+        next_date = df['Data Year - Fiscal'][i+1]
+        if (next_date <= curr_date):
+            df.loc[i, 'cId'] = id
+            id = id + 1
+        else:
+            df.loc[i, 'cId'] = id
+    else:
+        df.loc[i, 'cId'] = id
 
 # write the cleansed data into csv
-df.to_csv(os.path.join(cwd, 'data', 'sh-cleansed.csv'))
+df.to_csv(os.path.join(cwd, 'data', 'sh-cleansed.csv'), index=False)
