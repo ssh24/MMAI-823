@@ -1,5 +1,10 @@
+.vscode
 A1/data
 A2/data
+Project/data
+
+*.csv
+*.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
